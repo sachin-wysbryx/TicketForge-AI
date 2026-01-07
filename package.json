@@ -1,0 +1,23 @@
+{
+  "name": "ticketforge-ai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AI-powered distributed ticketing platform",
+  "packageManager": "npm@10.2.4",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^2.7.3"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
+  }
+}
