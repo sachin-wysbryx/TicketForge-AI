@@ -7,56 +7,44 @@ An AI-powered distributed event ticketing and live experience platform designed 
 ## 🚀 Tech Stack
 
 ### Frontend (`apps/web`)
-- **Next.js 15 (App Router)**: The core React framework for building our premium user interface.
-- **TypeScript**: Ensures type safety and improves developer experience.
-- **Vanilla CSS**: Used for maximum control over styling, enabling the high-fidelity, premium dark-mode aesthetics without the constraints of utility frameworks.
-- **Inter (Google Fonts)**: Professional typography for a modern, sleek tech feel.
+- **Next.js 15 (App Router)**: Core React framework for the premium user interface.
+- **TypeScript**: Ensures type safety across the application.
+- **Vanilla CSS**: Custom styling for high-fidelity, cinematic dark and light mode aesthetics.
+- **Inter (Google Fonts)**: Professional typography for a modern tech feel.
 
 ### Backend (`apps/api`)
-- **Node.js (ESM)**: Modern JavaScript runtime with full поддержку (support) for ES Modules.
-- **Express**: Fast and minimalist web framework for the REST API.
-- **PostgreSQL**: The primary relational database for storing users, tickets, and event data.
-- **JWT (JSON Web Tokens)**: Secure stateless authentication using Access and Refresh tokens.
-- **Bcrypt**: Industry-standard password hashing for maximum security.
-- **tsx**: Modern TypeScript execution engine for rapid development and ESM compatibility.
-
-### Monorepo & Tooling
-- **Turborepo**: Manages the multi-package workspace for efficient building and task orchestration.
-- **npm Workspaces**: Handles dependency management across the backend and frontend seamlessly.
+- **Node.js (ESM)**: Modern JavaScript runtime with full ES Modules support.
+- **Express**: Fast, minimalist web framework for REST API endpoints.
+- **PostgreSQL**: Primary relational database for users, tickets, and events.
+- **JWT (JSON Web Tokens)**: Secure stateless authentication with Access/Refresh token rotation.
+- **Bcrypt**: Industry-standard password hashing.
+- **tsx**: Modern TypeScript execution engine for rapid development.
 
 ---
 
 ## 📂 Project Structure
 
 ### `apps/api` (Backend)
-- `src/server.ts`: The main entry point. Configures Express, CORS, and standard middlewares.
+- `src/server.ts`: Entry point. Configures Express, CORS, and API routes.
 - `src/config/`:
-  - `db.ts`: PostgreSQL connection logic using the `pg` pool.
-  - `jwt.ts`: Centralized configuration for token secrets and expiration.
-- `src/modules/auth/`:
-  - `auth.routes.ts`: Defines authentication endpoints (`/register`, `/login`).
-  - `auth.service.ts`: Contains core business logic (DB queries, hashing, token signing).
-  - `auth.utils.ts`: Helper functions for generating JWTs.
-  - `middlewares/`: Security logic like rate limiting and token verification.
+  - `db.ts`: PostgreSQL pool connection.
+  - `setup.ts`: Applies the SQL schema to the database.
+  - `seed.ts`: **Master Seed File** containing all test users, events, bookings, and notifications.
+- `src/modules/`:
+  - `auth/`: JWT-based registration and login logic.
+  - `dashboard/`: Dynamic user profile data, search, and notification logic.
 
 ### `apps/web` (Frontend)
-- `src/app/layout.tsx`: Root layout defining fonts and global metadata.
-- `src/app/page.tsx`: Landing page logic (currently handles the initial user redirect).
-- `src/app/(auth)/`: Auth group for shared styling and layouts.
-  - `layout.tsx`: Split-screen premium layout with branding side-panel.
-  - `auth.css`: Centralized vanilla CSS for all auth-related components.
-  - `login/page.tsx`: Dynamic login form with real-time feedback.
-  - `register/page.tsx`: Dynamic registration form including field validation.
+- `src/app/page.tsx`: Landing page with themed redirect logic.
+- `src/app/(auth)/`: Premium split-screen login and registration experience.
+- `src/app/dashboard/`: Dynamic user dashboard with live search, favorites, and ticket management.
+- `src/app/globals.css`: Root design tokens and font configurations.
 
 ---
 
 ## 🛠️ Getting Started
 
-### 1. Prerequisites
-- **Node.js** (v18+)
-- **PostgreSQL** instance running locally or in the cloud.
-
-### 2. Environment Setup
+### 1. Environment Setup
 Create a `.env` file in `apps/api/`:
 ```env
 PORT=4000
@@ -65,37 +53,36 @@ JWT_ACCESS_SECRET=your_access_secret
 JWT_REFRESH_SECRET=your_refresh_secret
 ```
 
-### 3. Install Dependencies
+### 2. Install Dependencies
 ```bash
 npm install
 ```
 
-### 4. Database Migration
-Ensure your database has the `users` table:
-```sql
-CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    full_name TEXT NOT NULL,
-    role TEXT DEFAULT 'USER'
-);
+### 3. Database & Seeding
+Apply the schema and populate the database with test data in one go:
+```bash
+cd apps/api
+npx tsx src/config/setup.ts && npx tsx src/config/seed.ts
 ```
 
-### 5. Start Development
-From the root directory:
+### 4. Run Development
 ```bash
-# Start Backend
+# Terminal 1: API
 npm run dev -w @ticketforge/api
 
-# Start Frontend
+# Terminal 2: Web
 cd apps/web && npx next dev
 ```
 
 ---
 
+## 🔐 Test Account
+- **User**: `alex@example.com`
+- **Password**: `password123`
+
+---
+
 ## 🛡️ Security Features
-- **Rate Limiting**: Protects against brute-force attacks on the login endpoint.
-- **CORS**: Strictly controlled access for frontend-to-backend communication.
-- **Secure Hashing**: Multi-round Bcrypt salting/hashing for all passwords.
-- **Distributed Ledger Ready**: Architecture prepared for AI-driven fraud detection and authenticity verification.
+- **Stateless Auth**: JWT rotation for secure, scalable sessions.
+- **Rate Limiting**: Protection against brute-force attacks on login.
+- **Anti-Fraud Architecture**: Prepared for AI-driven verification and seat locking.

@@ -103,6 +103,27 @@ CREATE INDEX idx_bookings_user ON bookings(user_id);
 CREATE INDEX idx_refresh_tokens_user ON refresh_tokens(user_id);
 
 -- ================================
+-- FAVORITES (User Interests)
+-- ================================
+CREATE TABLE IF NOT EXISTS favorites (
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, event_id)
+);
+
+-- ================================
+-- NOTIFICATIONS (User Alerts)
+-- ================================
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ================================
 -- SEAT LOCKING (Advisory Lock Example)
 -- ================================
 -- Example usage in transaction:

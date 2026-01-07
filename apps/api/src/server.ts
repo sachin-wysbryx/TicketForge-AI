@@ -18,7 +18,10 @@ app.get("/health", (_, res) => {
 });
 
 import authRoutes from "./modules/auth/auth.routes.js";
+import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
+
 app.use("/api/auth", authRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 4000;
 
